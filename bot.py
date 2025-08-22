@@ -1,25 +1,42 @@
+import logging
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
 import random
-from telegram.ext import Updater, CommandHandler
 
-# Liste de blagues
-blagues = [
-    "Pourquoi les plongeurs plongent-ils toujours en arrière ? Parce que sinon ils tombent dans le bateau 😂",
-    "Quel est le comble pour un électricien ? De ne pas être au courant ⚡",
-    "Docteur, j’ai mal quand je fais ça ! – Alors ne faites plus ça 🤣"
+# Active les logs (utile pour Render)
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+
+# Ton token (ne le partage plus à personne 😉)
+TOKEN = "8311439481:AAFkqUJVSaeAAvEWCYxhIIuaBa04ZypiMGk"
+
+# Exemple de blagues
+jokes = [
+    "Pourquoi les programmeurs préfèrent-ils l'obscurité ? Parce que la lumière attire les bugs !",
+    "Un ordinateur dit à un autre : tu as trop de RAM ? L'autre répond : non, j'en ai juste assez pour me souvenir de toi.",
+    "Pourquoi les développeurs aiment-ils le café ? Parce que c'est leur source principale de Java !",
+    "Erreur 404 : blague non trouvée 😅"
 ]
 
-def start(update, context):
-    update.message.reply_text("Bienvenue sur 🎉 Zone Fun Bot 🎉 ! Tape /blague pour rigoler 😃")
+# Commande /start
+def start(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text("Salut 👋 Bienvenue sur Fun Zone Bot ! Tape /blague pour rire 😄")
 
-def blague(update, context):
-    update.message.reply_text(random.choice(blagues))
+# Commande /blague
+def blague(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(random.choice(jokes))
 
-# Ici ton vrai token
-updater = Updater("8311439481:AAFkqUJVSaeAAvEWCYxhIIuaBa04ZypiMGk", use_context=True)
-dp = updater.dispatcher
+def main():
+    updater = Updater(TOKEN, use_context=True)
+    dispatcher = updater.dispatcher
 
-dp.add_handler(CommandHandler("start", start))
-dp.add_handler(CommandHandler("blague", blague))
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CommandHandler("blague", blague))
 
-updater.start_polling()
-updater.idle()
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
